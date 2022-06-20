@@ -15,17 +15,27 @@ serverTest=int(serverTest)
 intents=nextcord.Intents.default()
 intents.members = True
 #pdb.set_trace()
-client = commands.Bot(command_prefix='!')
-testingServerID=serverTest
-@client.event
+bot = commands.Bot(command_prefix='!')
 
+
+@bot.event
 async def on_ready():#When the bot boots up
     print("The bot is now ready for use")
-    print(testingServerID)
 
-@client.slash_command(guild_ids=[testingServerID])
+@bot.slash_command(guild_ids=[serverTest]) #Basic test of slash commands
 async def hello(interaction: Interaction):
     await interaction.response.send_message("Hello Wolrd!")
 
+
+#set up COG reading folder
+Initial_extensions=[]
+
+for fileName in os.listdir('./cogs'):
+    if fileName.endswith('.py'):
+        Initial_extensions.append("cogs."+fileName[:-3])
+if __name__=='__main__':
+    for extension in Initial_extensions:
+        bot.load_extension(extension)
+
 token=str(token)
-client.run(token)
+bot.run(token)
