@@ -12,12 +12,14 @@ load_dotenv(dotenv_path)
 token = os.environ.get("token")
 serverTest = os.environ.get("testingServerID")
 serverTest=int(serverTest)
-intents=nextcord.Intents.default()
-intents.members = True
-#pdb.set_trace()
-bot = commands.Bot(command_prefix='!')
+intents = nextcord.Intents(messages=True,message_content = True, guilds=True)
 
 
+bot = commands.Bot(command_prefix='$')
+
+@bot.command()
+async def ping(ctx):
+    await ctx.reply('Pong!')
 @bot.event
 async def on_ready():#When the bot boots up
     print("The bot is now ready for use")
@@ -25,7 +27,16 @@ async def on_ready():#When the bot boots up
 @bot.slash_command(guild_ids=[serverTest]) #Basic test of slash commands
 async def hello(interaction: Interaction):
     await interaction.response.send_message("Hello Wolrd!")
-
+"""
+it looks like discord doesn't let this happen. Fair enough.
+@bot.event
+async def on_message(message):
+    print("Message Recieved")
+    if message.author == bot.user:
+        return
+    print(message.content)
+    pdb.set_trace()
+"""
 
 #set up COG reading folder
 Initial_extensions=[]
