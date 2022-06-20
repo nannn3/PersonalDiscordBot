@@ -1,23 +1,31 @@
+from asyncio.constants import SSL_HANDSHAKE_TIMEOUT
 import nextcord
 from nextcord import Interaction
 from nextcord.ext import commands
+import os
+from os.path import join, dirname
 from dotenv import load_dotenv
+import pdb
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
-load_dotenv()
-TOKEN=os.environ.get("token")
-testingServerID=os.environ.get("testingServerID")
-
+token = os.environ.get("token")
+serverTest = os.environ.get("testingServerID")
+serverTest=int(serverTest)
 intents=nextcord.Intents.default()
 intents.members = True
-
-client = commands.Bot(command_prefix='!',intents=intents)
-
+#pdb.set_trace()
+client = commands.Bot(command_prefix='!')
+testingServerID=serverTest
 @client.event
-async def on_ready():
+
+async def on_ready():#When the bot boots up
     print("The bot is now ready for use")
+    print(testingServerID)
 
-@nextcord.slash_command(name="hello",description="Hello World")
-async def hellocommand(interaction: Interaction)
-    await interaction.response.send_message("Hello Wolrd")
+@client.slash_command(guild_ids=[testingServerID])
+async def hello(interaction: Interaction):
+    await interaction.response.send_message("Hello Wolrd!")
 
-client.run('TOKEN')
+token=str(token)
+client.run(token)
