@@ -1,26 +1,61 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jul 10 10:51:53 2022
+Created on Sun Jul 10 12:38:45 2022
 
 @author: Tristen
 """
-import discord
-from discord.ext import commands
-from random import randrange
-class Cards(commands.Cog):
-    @commands.command()
-    def draw():
-        return card(randrange(1,52))
-#bot.add_cog(Cards(bot))
+import random
 
-class card:
+class Deck:
+    def __init__(self):
+        self.avail=[Card(i+1) for i in range(52)]
+        random.shuffle(self.avail) #It's like this is what it's made for
+    def __repr__(self):
+        return 'Deck(%s /52)'%len(self.avail)
+    def __str__(self):
+        return 'Deck(%s /52)'%len(self.avail)
+    def draw(self): #Draw a card from the top of the deck
+        foo=self.avail[0]
+        self.avail.pop(0)
+        return foo
+    
+    def shuffle(self): #Puts the discard pile back into the deck and shuffles
+        return random.shuffle(self.avail)
+    
+class Hand:
+    def __init__(self,owner,cards=[]):
+        self.owner = owner
+        self.cards = cards
+        self.size = len(self.cards)
+    def __repr__(self):
+        return 'Hand of size %s' %self.size
+    def __str__(self):
+        foo=f"{self.owner}'s hand :\n"
+        counter=12
+        while counter <= 119:
+            for i in self.cards:
+                if i !=self.cards[len(self.cards)-1]: #strip newlines from all but the last card
+                    foo+=str(i)[counter-12:counter].strip()
+                else:
+                    foo+=str(i)[counter-12:counter]
+            counter+=12
+        return foo
+
+        return foo
+    def add(self,card):
+        self.cards.append(card)
+        self.size=len(self.cards)
+    def empty(self):
+        self.cards = None
+    
+class Card:
     def __init__(self,number):
         #Creates a card from a number, 1-52.
         rank=(number%13)+1 #number will be between 1 & 13, inclusive
         if rank <11 and rank != 1:
             self.rank= str(rank)
         elif rank==11:
-            self.rank='Jack'
+                self.rank='Jack'
         elif rank == 12:
             self.rank='Queen'
         elif rank == 13:
@@ -63,9 +98,13 @@ class card:
         lines[8].append('└─────────┘')
         
         result = [''.join(line) for line in lines]
-        return '\n'.join(result)
 
+        return '\n'.join(result)
     
-def setup(bot):
-    bot.add_cog(Cards(bot))
-            
+if __name__=='__main__':
+    hand=Hand("Me")
+    deck=Deck()
+    for i in range(3):
+     hand.add(deck.draw())
+    print(hand)
+

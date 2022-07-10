@@ -24,7 +24,7 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='$', intents=intents)
 
-bot.add_cog(Cards(bot))
+
 
         
 @bot.event
@@ -67,4 +67,11 @@ async def on_message(message):
         await message.channel.send(embed=embed) 
         
     await bot.process_commands(message) #clears out the input buffer, similar to fflush in c. lets it process other messages
+    
+for filename in os.listdir('./cogs'):
+  if filename.endswith('.py'):
+    bot.load_extension(f'cogs.{filename[:-3]}')
+    
+  else:
+    print(f'Unable to load {filename[:-3]}')
 bot.run(TOKEN)
