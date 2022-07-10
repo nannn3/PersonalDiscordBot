@@ -13,12 +13,16 @@ import games
 open_hands={}
 
 class Cards(commands.Cog):
+    #Cogs are classes, used to hold similar commands in one place
+    
     def __init__(self,bot):
         self.bot=bot
+        
     @commands.command()
     async def draw(self, ctx, n=1): #Draws n cards and adds them to a player's hand
         
-        if ctx.author not in open_hands:
+        if ctx.author not in open_hands: #ideally don't keep opening hands for the same player
+        #not functional yet
            hand=games.Hand(ctx.author)
            open_hands[ctx.author]=hand
            pdb.set_trace()
@@ -47,6 +51,7 @@ class Cards(commands.Cog):
             await ctx.reply("You don't have a hand in play.")
     @commands.command()
     async def test_card(self,ctx):
+        #used to make sure the formatting of the cards is correct
         await ctx.reply(games.Card(randrange(1,52)))
 
             

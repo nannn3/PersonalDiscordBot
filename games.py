@@ -7,6 +7,7 @@ Created on Sun Jul 10 12:38:45 2022
 import random
 import pdb
 class Deck:
+    #A classic deck. Hold info on the cards not yet drawn
     def __init__(self):
         self.avail=[Card(i+1) for i in range(52)]
         random.shuffle(self.avail) #It's like this is what it's made for
@@ -43,6 +44,7 @@ class Hand:
         self.cards = None
     
 class Card:
+    #Card class holds information about the cards. Their rank and suit, and provides a method to see the carsds
     def __init__(self,number):
         #Creates a card from a number, 1-52.
         rank=(number%13)+1 #number will be between 1 & 13, inclusive
