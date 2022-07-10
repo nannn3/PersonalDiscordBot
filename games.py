@@ -5,7 +5,7 @@ Created on Sun Jul 10 12:38:45 2022
 @author: Tristen
 """
 import random
-
+import pdb
 class Deck:
     def __init__(self):
         self.avail=[Card(i+1) for i in range(52)]
@@ -31,15 +31,9 @@ class Hand:
         return 'Hand of size %s' %self.size
     def __str__(self):
         foo=f"{self.owner}'s hand :\n"
-        counter=12
-        while counter <= 119:
-            for i in self.cards:
-                if i !=self.cards[len(self.cards)-1]: #strip newlines from all but the last card
-                    foo+=str(i)[counter-12:counter].strip()
-                else:
-                    foo+=str(i)[counter-12:counter]
-            counter+=12
-        return foo
+        foo+=cardArt(self.cards)
+        return(foo)
+
 
         return foo
     def add(self,card):
@@ -75,36 +69,45 @@ class Card:
         
     def __repr__(self):
         return 'Card(%s of %s)' %(self.rank,self.suit)
+    
     def __str__(self):
-        suits_symbols = {'Spades':'♠','Diamonds': '♦','Hearts': '♥', 'Clubs' :'♣'}
-        
-        lines=[[] for i in range(9)]# create an empty list of list, each sublist is a line
-        
-        if self.rank== 10: #10 is the only rank we want to display 2 characters
+        return cardArt(self)
+    
+def cardArt(*cards):
+   # pdb.set_trace()
+    suits_symbols = {'Spades':'♠','Diamonds': '♦','Hearts': '♥', 'Clubs' :'♣'}
+    
+    lines=[[] for i in range(9)]# create an empty list of list, each sublist is a line
+    for card in cards[0]:
+        if card.rank== '10': #10 is the only rank we want to display 2 characters
             space=''
+            rank=card.rank
         else: 
-            rank=self.rank[0] #Take the first part of the rank, IE, the first letter for special cards
+            rank=card.rank[0] #Take the first part of the rank, IE, the first letter for special cards
             space=' '
-        sym=suits_symbols.get(self.suit) #Grab the symbol for  the suit
+        sym=suits_symbols.get(card.suit) #Grab the symbol for  the suit
         # add the individual card on a line by line basis
         lines[0].append('┌─────────┐')
-        lines[1].append('│{}{}       │'.format(rank, space))  # use two {} one for char, one for space or char
-        lines[2].append('│         │')
-        lines[3].append('│         │')
-        lines[4].append('│    {}    │'.format(sym))
-        lines[5].append('│         │')
-        lines[6].append('│         │')
-        lines[7].append('│       {}{}│'.format(space, rank))
+        lines[1].append(' │{}{}                        │'.format(rank, space))  # use two {} one for char, one for space or char
+        lines[2].append(' │                            │')
+        lines[3].append(' │                            │')
+        lines[4].append(' │            {}          │'.format(sym))
+        lines[5].append(' │                            │')
+        lines[6].append(' │                            │')
+        lines[7].append(' │                        {}{}│'.format(space, rank))
         lines[8].append('└─────────┘')
-        
-        result = [''.join(line) for line in lines]
+    
+    result = [''.join(line) for line in lines]
 
-        return '\n'.join(result)
+    return '\n'.join(result)
+
     
 if __name__=='__main__':
     hand=Hand("Me")
     deck=Deck()
+    card=deck.draw()
     for i in range(3):
      hand.add(deck.draw())
     print(hand)
+    print(card)
 
