@@ -9,7 +9,7 @@ Created on Sat Jul  2 14:55:33 2022
 
 import discord
 from discord.ext import commands
-import random
+from random import randrange
 
 from dotenv import load_dotenv
 import pdb
@@ -24,6 +24,9 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='$', intents=intents)
 
+bot.add_cog(Cards(bot))
+
+        
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -39,6 +42,7 @@ async def leave(ctx):
         await ctx.send("Bye!")
     else:
         await ctx.send("I already left")
+        
 
 @bot.command()
 async def join(ctx):
