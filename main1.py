@@ -57,18 +57,22 @@ async def join(ctx):
 @bot.command()
 async def thread(ctx):
     # takes a reply chain and makes it into a thread.
-    s = Stack()
+    try:
+        s = Stack()
 
-    message = ctx.message
-    name = ctx.message.content.removeprefix("!thread")
-    while message.reference:
-        if '!thread' not in message.content:
-            s.push(message.content)
-        message = await ctx.channel.fetch_message(message.reference.message_id)
+        message = ctx.message
+        name = message.content.removeprefix("!thread")
+        while message.reference:
+            if '!thread' not in message.content:
+                s.push(str(message.author.name)+":\n"+str(message.content))
+            message = await ctx.channel.fetch_message(message.reference.message_id)
 
-    thd = await message.create_thread(name=name)
-    while not s.isEmpty():
-        await thd.send(s.pop())
+        thd = await message.create_thread(name=name)
+        while not s.isEmpty():
+            await thd.send(s.pop())
+    except discord.errors.HTTPException:
+        link = message.jump_url
+        await ctx.send("That message is already a thread: " + str(link))
 
 
 @bot.command()
