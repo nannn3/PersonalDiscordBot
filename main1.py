@@ -55,12 +55,12 @@ async def join(ctx):
 
 
 @bot.command()
-async def thread(ctx, name):
+async def thread(ctx):
     # takes a reply chain and makes it into a thread.
-    # TODO: make it so that name can be > 1 word
     s = Stack()
 
     message = ctx.message
+    name = ctx.message.content.removeprefix("!thread")
     while message.reference:
         if '!thread' not in message.content:
             s.push(message.content)
