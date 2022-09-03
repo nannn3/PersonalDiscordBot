@@ -63,6 +63,8 @@ async def thread(ctx):
         message = ctx.message
         name = message.content.removeprefix("!thread")
         while message.reference:
+            # follows the reply chain to the end. Creates a thread on the first message in the chain
+            # and adds the messages in the reply chain to the thread
             if '!thread' not in message.content:
                 s.push(str(message.author.name)+":\n"+str(message.content))
             message = await ctx.channel.fetch_message(message.reference.message_id)
@@ -88,10 +90,10 @@ async def on_message(message):
     if message.author == bot.user:  # Responding to itself would be silly
         return
 
-    if "@y'all" in message.content:
+    if "@y'all" in message.content.lower():
         await message.reply("@everyone")
 
-    if 'cutie' in message.content:
+    if 'cutie' in message.content.lower():
         '''This one's almost exclusivly for my girlfriend'''
         embed = discord.Embed()
         embed.set_image(url='https://c.tenor.com/iESegr2Kb6MAAAAd/narpy-cute.gif')
