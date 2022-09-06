@@ -10,8 +10,8 @@ from discord.ext import commands
 
 from dotenv import load_dotenv
 import os
+import time
 
-import pdb
 
 load_dotenv('.env')
 TOKEN = os.environ.get('token')
@@ -21,6 +21,14 @@ intents = discord.Intents.all()
 intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+
+class Storage:
+    def __init__(self):
+        self.thds = {}
+
+
+storage = Storage()
 
 
 @bot.event
@@ -55,8 +63,21 @@ async def join(ctx):
 
 
 @bot.command()
+async def test(ctx):
+    await ctx.reply('0')
+
+    @bot.event
+    async def on_message(message):
+        if message.author == bot.user and message.content.isnumeric() and int(message.content) < 10:
+            await message.reply(str(int(message.content)+1))
+            await bot.process_commands(message)
+
+
+@bot.command()
 async def thread(ctx):
     # takes a reply chain and makes it into a thread.
+    start = time.time()
+
     try:
         s = Stack()
 
@@ -70,11 +91,18 @@ async def thread(ctx):
             message = await ctx.channel.fetch_message(message.reference.message_id)
 
         thd = await message.create_thread(name=name)
+
         while not s.isEmpty():
             await thd.send(s.pop())
-    except discord.errors.HTTPException:
-        link = message.jump_url
+
+        storage.thds[message.id] = thd.jump_url
+        end = time.time()
+        print("Time taken :", end-start)
+    except discord.errors.HTTPException or KeyError:
+        link = [message.jump_url if message.id not in storage.thds else storage.thds[message.id]]
         await ctx.send("That message is already a thread: " + str(link))
+        end = time.time()
+        print("Time taken :", end-start)
 
 
 @bot.command()
